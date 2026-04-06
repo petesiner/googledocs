@@ -1,0 +1,246 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.lw{font-family:var(--font-sans);padding-bottom:3rem}
+.hero{padding:2rem 0 1.5rem}
+.hero-tag{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-info);margin-bottom:.6rem}
+.hero h1{font-size:clamp(1.5rem,4vw,2rem);font-weight:500;color:var(--color-text-primary);line-height:1.2;margin-bottom:.5rem}
+.hero-sub{font-size:15px;color:var(--color-text-secondary);line-height:1.6;max-width:500px}
+.outcomes{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin:1.25rem 0}
+.outcomes-label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:.75rem}
+.outcomes ul{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+.outcomes li{font-size:14px;color:var(--color-text-secondary);display:flex;align-items:flex-start;gap:.5rem;line-height:1.5}
+.outcomes li::before{content:'→';color:var(--color-text-info);font-size:12px;margin-top:2px;flex-shrink:0}
+.prog-row{display:flex;align-items:center;gap:12px;margin:1.25rem 0}
+.prog-track{flex:1;height:4px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;background:#378ADD;border-radius:99px;transition:width .35s ease;width:0%}
+.prog-lbl{font-size:12px;color:var(--color-text-tertiary);min-width:36px;text-align:right}
+.steps{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem}
+.step{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden;transition:border-color .2s}
+.step.active{border-color:#378ADD}
+.step-hdr{padding:.9rem 1.25rem;cursor:pointer;display:flex;align-items:center;gap:.85rem;user-select:none}
+.step-badge{font-size:11px;font-weight:500;color:#185FA5;background:#E6F1FB;border-radius:var(--border-radius-md);padding:.2rem .55rem;flex-shrink:0;min-width:32px;text-align:center;transition:all .2s}
+.step-badge.done{background:#EAF3DE;color:#3B6D11}
+.step-icon{font-size:16px;flex-shrink:0}
+.step-title{flex:1;font-size:14px;font-weight:500;color:var(--color-text-secondary);line-height:1.3}
+.step.active .step-title{color:var(--color-text-primary)}
+.step-chev{font-size:12px;color:var(--color-text-tertiary);transition:transform .22s}
+.step.active .step-chev{transform:rotate(180deg);color:#378ADD}
+.step-body{display:none;padding:0 1.25rem 1.25rem;border-top:0.5px solid var(--color-border-tertiary)}
+.step.active .step-body{display:block}
+.step-scene{font-size:13px;color:var(--color-text-tertiary);font-style:italic;margin:.75rem 0 1rem;padding-left:.75rem;border-left:2px solid var(--color-border-tertiary);border-radius:0}
+.tasks{list-style:none;display:flex;flex-direction:column;gap:.35rem}
+.task{display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;padding:.4rem .5rem;border-radius:var(--border-radius-md);transition:background .15s}
+.task:hover{background:var(--color-background-secondary)}
+.cb{width:18px;height:18px;border:0.5px solid var(--color-border-secondary);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .2s;background:var(--color-background-primary)}
+.task.checked .cb{background:#378ADD;border-color:#378ADD}
+.chk{display:none;width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.task.checked .chk{display:block}
+.task-txt{font-size:14px;color:var(--color-text-secondary);line-height:1.5;flex:1}
+.task.checked .task-txt{color:var(--color-text-tertiary);text-decoration:line-through}
+.task-txt code{font-family:var(--font-mono);font-size:12px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:4px;padding:.1rem .35rem;color:var(--color-text-info)}
+.task.checked .task-txt code{opacity:.5}
+.tip{margin-top:.9rem;background:#E6F1FB;border-radius:var(--border-radius-md);padding:.65rem .9rem;font-size:13px;color:#185FA5;display:flex;align-items:flex-start;gap:.5rem}
+.tip-i{flex-shrink:0;margin-top:1px}
+.done-banner{display:none;margin:.75rem 0 0;background:#EAF3DE;border-radius:var(--border-radius-md);padding:.6rem .9rem;font-size:13px;color:#3B6D11;display:flex;align-items:center;gap:.5rem}
+.done-banner.hidden{display:none!important}
+.cl-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem}
+.cl-label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:1rem}
+.cl-list{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.cl-item{display:flex;align-items:center;gap:.75rem;font-size:14px;color:var(--color-text-tertiary);transition:color .3s}
+.cl-item.done{color:var(--color-text-success)}
+.cl-dot{width:7px;height:7px;border-radius:50%;background:var(--color-border-secondary);flex-shrink:0;transition:background .3s}
+.cl-item.done .cl-dot{background:#639922}
+</style>
+
+<div class="lw">
+  <div class="hero">
+    <div class="hero-tag">Your turn · Google Docs</div>
+    <h1>Creating &amp; collaborating<br>on a lesson plan</h1>
+    <div class="hero-sub">Work through each step to format, share, and collaborate on a lesson plan with your co-teaching team.</div>
+  </div>
+
+  <div class="outcomes">
+    <div class="outcomes-label">By the end, you will</div>
+    <ul>
+      <li>Format and structure a document using styles and headings</li>
+      <li>Collaborate with comments and Suggesting mode</li>
+      <li>Insert images and bookmarks for easy navigation</li>
+      <li>Organize and share your doc in Google Drive</li>
+    </ul>
+  </div>
+
+  <div class="prog-row">
+    <div class="prog-track"><div class="prog-fill" id="prog"></div></div>
+    <div class="prog-lbl" id="prog-lbl">0 / 6</div>
+  </div>
+
+  <div class="steps" id="steps-container">
+
+    <div class="step active" data-step="0">
+      <div class="step-hdr" onclick="toggleStep(0)">
+        <div class="step-badge" id="num-0">01</div>
+        <div class="step-icon">📄</div>
+        <div class="step-title">Create a blank doc &amp; copy the lesson plan</div>
+        <div class="step-chev">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="step-scene">Your team needs a structured lesson plan for an upcoming unit.</div>
+        <ul class="tasks" id="tasks-0">
+          <li class="task" onclick="checkTask(this,0)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Open Google Docs and click <strong>Blank Document</strong></span></li>
+          <li class="task" onclick="checkTask(this,0)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Click "Untitled document" and rename it: <code>[Grade/Subject] Lesson Plan – [Your Name]</code></span></li>
+          <li class="task" onclick="checkTask(this,0)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Copy and paste the lesson plan text into your document</span></li>
+        </ul>
+        <div class="tip"><div class="tip-i">💡</div>Example title: <em>Grade 6 ELA – Argumentative Writing</em></div>
+        <div class="done-banner hidden" id="done-0">✓ Doc created and lesson plan pasted</div>
+      </div>
+    </div>
+
+    <div class="step" data-step="1">
+      <div class="step-hdr" onclick="toggleStep(1)">
+        <div class="step-badge" id="num-1">02</div>
+        <div class="step-icon">🎨</div>
+        <div class="step-title">Format &amp; organize the document</div>
+        <div class="step-chev">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="step-scene">A well-formatted doc makes it easy for co-teachers to navigate quickly.</div>
+        <ul class="tasks" id="tasks-1">
+          <li class="task" onclick="checkTask(this,1)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Use the Styles dropdown to set Lesson Objectives, Instructional Activities, and Assessment Plan as <code>Heading 1</code></span></li>
+          <li class="task" onclick="checkTask(this,1)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Number the instructional activities to make each step clear</span></li>
+        </ul>
+        <div class="tip"><div class="tip-i">💡</div>Headings unlock the document outline panel — helpful for longer docs.</div>
+        <div class="done-banner hidden" id="done-1">✓ Document structured for easy navigation</div>
+      </div>
+    </div>
+
+    <div class="step" data-step="2">
+      <div class="step-hdr" onclick="toggleStep(2)">
+        <div class="step-badge" id="num-2">03</div>
+        <div class="step-icon">💬</div>
+        <div class="step-title">Add comments &amp; use Suggesting mode</div>
+        <div class="step-chev">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="step-scene">Your co-teacher wants to review and suggest edits without changing the original.</div>
+        <ul class="tasks" id="tasks-2">
+          <li class="task" onclick="checkTask(this,2)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Highlight the Writing Task description and click the comment icon</span></li>
+          <li class="task" onclick="checkTask(this,2)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Type: <em>"Should we add a sentence starter here?"</em> and submit</span></li>
+          <li class="task" onclick="checkTask(this,2)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Go to <code>View → Mode → Suggesting</code> and try editing a sentence</span></li>
+        </ul>
+        <div class="tip"><div class="tip-i">💡</div>Suggestions appear in a distinct color and can be accepted or rejected by any editor.</div>
+        <div class="done-banner hidden" id="done-2">✓ Feedback tracked and visible</div>
+      </div>
+    </div>
+
+    <div class="step" data-step="3">
+      <div class="step-hdr" onclick="toggleStep(3)">
+        <div class="step-badge" id="num-3">04</div>
+        <div class="step-icon">🔗</div>
+        <div class="step-title">Insert a bookmark &amp; hyperlink</div>
+        <div class="step-chev">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="step-scene">Make the doc self-navigating so readers can jump to key sections.</div>
+        <ul class="tasks" id="tasks-3">
+          <li class="task" onclick="checkTask(this,3)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Insert a page break before the assessment section and add the heading <strong>Lesson Assessments</strong></span></li>
+          <li class="task" onclick="checkTask(this,3)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Change the font to blue, size 24, and choose a different style</span></li>
+          <li class="task" onclick="checkTask(this,3)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Insert a 2×4 table labeled Assessment Type and Link</span></li>
+          <li class="task" onclick="checkTask(this,3)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Click before "Lesson Assessments" → <code>Insert → Bookmark</code></span></li>
+          <li class="task" onclick="checkTask(this,3)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Scroll up, highlight "Assessment Plan" → <code>Insert → Link</code> → choose the bookmark</span></li>
+        </ul>
+        <div class="tip"><div class="tip-i">💡</div>Bookmarks + links work like a mini table of contents inside your doc.</div>
+        <div class="done-banner hidden" id="done-3">✓ Readers can now jump directly to assessments</div>
+      </div>
+    </div>
+
+    <div class="step" data-step="4">
+      <div class="step-hdr" onclick="toggleStep(4)">
+        <div class="step-badge" id="num-4">05</div>
+        <div class="step-icon">🖼️</div>
+        <div class="step-title">Insert an image</div>
+        <div class="step-chev">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="step-scene">Visuals help anchor the document and give it a polished feel.</div>
+        <ul class="tasks" id="tasks-4">
+          <li class="task" onclick="checkTask(this,4)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Click <code>Insert → Image → Search the Web</code></span></li>
+          <li class="task" onclick="checkTask(this,4)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Search for <em>Research Paper</em>, insert an image, and move it to the top of the page</span></li>
+        </ul>
+        <div class="tip"><div class="tip-i">💡</div>Click the image once inserted to adjust wrap settings — inline, wrap text, etc.</div>
+        <div class="done-banner hidden" id="done-4">✓ Image inserted and positioned</div>
+      </div>
+    </div>
+
+    <div class="step" data-step="5">
+      <div class="step-hdr" onclick="toggleStep(5)">
+        <div class="step-badge" id="num-5">06</div>
+        <div class="step-icon">📁</div>
+        <div class="step-title">Share &amp; organize in Google Drive</div>
+        <div class="step-chev">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="step-scene">Your co-teaching team needs access to collaborate in real time.</div>
+        <ul class="tasks" id="tasks-5">
+          <li class="task" onclick="checkTask(this,5)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Click the folder icon next to the doc title → <strong>New Folder</strong></span></li>
+          <li class="task" onclick="checkTask(this,5)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Name it <code>Lesson Plans &amp; Resources</code>, click Create, then Move Here</span></li>
+          <li class="task" onclick="checkTask(this,5)"><div class="cb"><svg class="chk" viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div><span class="task-txt">Click Share, enter <code>demoteachergce@gmail.com</code>, set as Editor, and click Send</span></li>
+        </ul>
+        <div class="tip"><div class="tip-i">💡</div>Organizing before sharing keeps everything findable for the whole team.</div>
+        <div class="done-banner hidden" id="done-5">✓ Lesson plan organized and shared</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cl-card">
+    <div class="cl-label">Self-assessment checklist</div>
+    <ul class="cl-list">
+      <li class="cl-item" id="cl-0"><div class="cl-dot"></div>Doc created, titled, and formatted</li>
+      <li class="cl-item" id="cl-1"><div class="cl-dot"></div>Lesson plan copied and organized</li>
+      <li class="cl-item" id="cl-2"><div class="cl-dot"></div>Comments and suggestions added</li>
+      <li class="cl-item" id="cl-3"><div class="cl-dot"></div>Bookmark and hyperlink working</li>
+      <li class="cl-item" id="cl-4"><div class="cl-dot"></div>Image inserted and positioned</li>
+      <li class="cl-item" id="cl-5"><div class="cl-dot"></div>Doc shared and stored in Drive</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+const stepTotals=[3,2,3,5,2,3];
+const stepDone=[false,false,false,false,false,false];
+
+function toggleStep(i){
+  document.querySelectorAll('.step').forEach((s,idx)=>{
+    s.classList.toggle('active', idx===i && !s.classList.contains('active'));
+  });
+}
+
+function checkTask(el,si){
+  el.classList.toggle('checked');
+  const all=document.querySelectorAll('#tasks-'+si+' .task');
+  let count=0;
+  all.forEach(t=>{ if(t.classList.contains('checked')) count++; });
+  const done=count===stepTotals[si];
+  stepDone[si]=done;
+  const b=document.getElementById('done-'+si);
+  b.classList.toggle('hidden',!done);
+  const num=document.getElementById('num-'+si);
+  num.textContent=done?'✓':(si+1).toString().padStart(2,'0');
+  num.classList.toggle('done',done);
+  updateProgress();
+  updateChecklist();
+}
+
+function updateProgress(){
+  const n=stepDone.filter(Boolean).length;
+  document.getElementById('prog').style.width=Math.round(n/6*100)+'%';
+  document.getElementById('prog-lbl').textContent=n+' / 6';
+}
+
+function updateChecklist(){
+  for(let i=0;i<6;i++){
+    document.getElementById('cl-'+i).classList.toggle('done',stepDone[i]);
+  }
+}
+</script>
